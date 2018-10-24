@@ -9,7 +9,7 @@ var numIter;
 
 function setup() {
         createCanvas(600, 600);
-        numlocs = 5;
+        numlocs = 6;
         pointSize = 10;
         bestDist = 0;
         currDist = 0;
@@ -120,4 +120,7 @@ function showText() {
         fill(225, 55);
         textSize(15);
         text("Best distance: " + bestDist, 35, 35);
+
+	var pct = floor( (((numIter)/fact(numlocs))* 100) * 1000) / 1000;
+	text("% finished: " + pct, 35, 65);
 }
