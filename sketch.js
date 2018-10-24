@@ -9,7 +9,7 @@ var numIter;
 
 function setup() {
         createCanvas(600, 600);
-        numlocs = 4;
+        numlocs = 5;
         pointSize = 10;
         bestDist = 0;
         currDist = 0;
@@ -26,33 +26,32 @@ function draw() {
         showPoints();
         drawPath();
         showText();
-        changeLoc();
 	lexOrder();
 }
 
 function showPoints() {
         fill(255);
         for (var i = 0; i < bestPath.length; i++) {
-                ellipse(bestPath[i].x, bestPath[i].y, pointSize, pointSize);
+                ellipse(locs[i].x, locs[i].y, pointSize, pointSize);
         }
 }
 
 function drawPath() {
         stroke(255);
         for (var i = 0; i < bestPath.length - 1; i++) {
-                line(bestPath[i].x, bestPath[i].y, bestPath[i + 1].x, bestPath[i + 1].y);
+                line(locs[bestPath[i]].x, locs[bestPath[i]].y, locs[bestPath[i + 1]].x, locs[bestPath[i + 1]].y);
         }
 }
 
 function calcDist() {
         currDist = 0;
-        for (var i = 0; i < locs.length - 1; i++) {
-                currDist += dist(locs[i].x, locs[i].y, locs[i + 1].x, locs[i + 1].y);
+        for (var i = 0; i < locsOrder.length - 1; i++) {
+                currDist += dist(locs[locsOrder[i]].x, locs[locsOrder[i]].y, locs[locsOrder[i + 1]].x, locs[locsOrder[i + 1]].y);
         }
 
         if (currDist < bestDist || bestDist === 0) {
                 bestDist = (floor(currDist * 1000)) / 1000; //rounds down to 3 digits
-                bestPath = locs.slice();
+                bestPath = locsOrder.slice();
         }
 }
 
@@ -71,6 +70,7 @@ function lexOrder() {
 	}
 	if (largestX === -1) { // order is finished
 		console.log("finished");
+		//console.log(bestPath);
 		noLoop();
 		return;
 	} else {
@@ -94,7 +94,6 @@ function lexOrder() {
 	temp.reverse();
 	locsOrder = locsOrder.concat(temp);
 	numIter++;
-	console.log("#" + numIter + " : " + locsOrder);
 
 }
 
@@ -107,6 +106,14 @@ function swap(a, index1, index2) {
         var temp = a[index1];
         a[index1] = a[index2];
         a[index2] = temp;
+}
+
+function fact(n) {
+	var result = n;
+	for (var i = n - 1; i > 0; i--) {
+		result *= i;
+	}
+	return result;
 }
 
 function showText() {
