@@ -5,6 +5,7 @@ var currDist;
 var bestDist;
 var bestPath = [];
 var locsOrder = [];
+var numIter;
 
 function setup() {
         createCanvas(600, 600);
@@ -12,6 +13,7 @@ function setup() {
         pointSize = 10;
         bestDist = 0;
         currDist = 0;
+	numIter = 0;
         for (var i = 0; i < numlocs; i++) {
                 locs.push(createVector(random(width), random(height)));
 		locsOrder[i] = i;
@@ -25,6 +27,7 @@ function draw() {
         drawPath();
         showText();
         changeLoc();
+	lexOrder();
 }
 
 function showPoints() {
@@ -58,7 +61,41 @@ function calcDist() {
  * Using: https://www.quora.com/How-would-you-explain-an-algorithm-that-generates-permutations-using-lexicographic-ordering#
  */
 function lexOrder() {
-	
+	/* Largest x such that locsOrder[x] < locsOrder[x+1] */
+	var largestX = -1;
+	for (var i = 0; i < locsOrder.length - 1; i++) {
+
+		if (locsOrder[i] < locsOrder[i+1]) {
+			largestX = i;
+		}
+	}
+	if (largestX === -1) { // order is finished
+		console.log("finished");
+		noLoop();
+		return;
+	} else {
+		// console.log(locsOrder);
+		// console.log("Largest X is: " + largestX);
+	}
+
+	var largestY = -1;
+	/* Largest y such that locsOrder[largestX] < locsOrder[y] */
+	for (var i = 0; i < locsOrder.length; i++) {
+		if (locsOrder[largestX] < locsOrder[i]) {
+			largestY = i;
+		}
+
+	}
+
+	swap(locsOrder, largestX, largestY);
+
+	/* Reverse locsOrder[largestX + 1...end] */
+	var temp = locsOrder.splice(largestX + 1);
+	temp.reverse();
+	locsOrder = locsOrder.concat(temp);
+	numIter++;
+	console.log("#" + numIter + " : " + locsOrder);
+
 }
 
 // Assumes numlocs is > 2
