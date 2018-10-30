@@ -1,49 +1,49 @@
-var locs = [];
-var numlocs;
+var locs = []; // Array of random locations
+var numlocs; // Number of random locations
 var pointSize;
-var currDist;
-var bestDist;
+var currDist; // Distance of current path in Lexocographic order
+var bestDist; // Best distance found so far
 var bestPath = [];
-var locsOrder = [];
-var numIter;
+var locsOrder = []; // Order for locations in Lexocographic order computation
+var numIter; // Number of current Lexocographic permutation in order
+var numPop;
 
 function setup() {
         createCanvas(600, 600);
-        numlocs = 6;
+        numlocs = 8;
         pointSize = 10;
         bestDist = 0;
         currDist = 0;
 	numIter = 0;
+        numPop = 10;
         for (var i = 0; i < numlocs; i++) {
                 locs.push(createVector(random(width), random(height)));
-		locsOrder[i] = i;
+		locsOrder.push(i);
         }
+
 }
 
 function draw() {
         background(0);
-        calcDist();
         showPoints();
         drawPath();
-        showText();
-	lexOrder();
 }
 
 function showPoints() {
-        fill(255);
-        for (var i = 0; i < bestPath.length; i++) {
+        fill(255, 55);
+        for (var i = 0; i < locs.length; i++) {
                 ellipse(locs[i].x, locs[i].y, pointSize, pointSize);
         }
 }
 
 function drawPath() {
-        stroke(255);
+        stroke(255, 55);
         for (var i = 0; i < bestPath.length - 1; i++) {
                 line(locs[bestPath[i]].x, locs[bestPath[i]].y, locs[bestPath[i + 1]].x, locs[bestPath[i + 1]].y);
         }
 }
 
-function calcDist() {
+function calcLexDist() {
         currDist = 0;
         for (var i = 0; i < locsOrder.length - 1; i++) {
                 currDist += dist(locs[locsOrder[i]].x, locs[locsOrder[i]].y, locs[locsOrder[i + 1]].x, locs[locsOrder[i + 1]].y);
@@ -116,11 +116,11 @@ function fact(n) {
 	return result;
 }
 
-function showText() {
-        fill(225, 55);
+function showLexText() {
+        fill(225);
         textSize(15);
         text("Best distance: " + bestDist, 35, 35);
 
-	var pct = floor( (((numIter)/fact(numlocs))* 100) * 1000) / 1000;
+	var pct = floor( (((numIter + 1)/fact(numlocs))* 100) * 1000) / 1000;
 	text("% finished: " + pct, 35, 65);
 }
